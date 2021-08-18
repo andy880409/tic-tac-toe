@@ -1,43 +1,47 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
-	"strconv"
-	"strings"
 )
 
-const initApp = 0
-
-var board = [15]string{" ", "|", " ", "|", " \n", " ", "|", " ", "|", " \n", " ", "|", " ", "|", " \n"}
+type game struct {
+	board  [9]string
+	player string
+}
 
 func main() {
-	drawScaffold(initApp)
-	reader := bufio.NewReader(os.Stdin)
-	for {
-		fmt.Print("Choose a position from 1 to 9:")
-		number, err := reader.ReadString('\n')
-		if err != nil {
-			log.Fatal(err)
-		}
-		number = strings.TrimSpace(number)
-		posi, err := strconv.Atoi(number)
-		drawScaffold(posi)
+	var newGame game
+	printBoard(newGame.board)
+	posi, err := inputPosition()
+	if err != nil {
+		log.Fatal(err)
 	}
-	// clearScreen()
+	fmt.Println(posi)
+
 }
-func drawScaffold(posi int) {
-	switch posi {
-	case 1:
-		board[0] = "X"
-
+func inputPosition() (int, error) {
+	var posi int
+	fmt.Print("Enter a position from 1 to 9:")
+	_, err := fmt.Scan(&posi)
+	if err != nil {
+		return posi, nil
 	}
-	for _, v := range board {
-		fmt.Print(v)
+	return posi, nil
+}
+func printBoard(board [9]string) {
+	for i, v := range board {
+		if v == "" {
+			fmt.Print(" ")
+		} else {
+			fmt.Print(v)
+		}
+		if (i+1)%3 == 0 { //2,5,8 position need a newline
+			fmt.Print("\n")
+		} else {
+			fmt.Print("|")
+		}
 	}
-
 }
 
 // func clearScreen() {
